@@ -1,0 +1,2 @@
+[console_scripts]
+oakley-bookings = oakley_bookings.cli:main
