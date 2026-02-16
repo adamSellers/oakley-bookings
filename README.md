@@ -1,6 +1,6 @@
 # oakley-bookings
 
-Restaurant discovery & booking CLI for [OpenClaw](https://openclaw.dev). Searches via Google Places, books via Resy (automated) or deep links (OpenTable, Quandoo), and tracks dining history. Sydney, Australia focused.
+Restaurant discovery & booking CLI for [OpenClaw](https://openclaw.dev). Searches via Google Places, books via Resy (automated) or deep links (OpenTable, Quandoo), and tracks dining history. Sydney, Australia focused with geolocation support.
 
 ## Architecture
 
@@ -63,6 +63,9 @@ oakley-bookings status
 # Search for Italian restaurants in Surry Hills
 oakley-bookings search --query "Italian Surry Hills" --party-size 2
 
+# Search near current location
+oakley-bookings search --query "sushi" --near-me
+
 # Check availability
 oakley-bookings check --place-id ChIJ... --date 2026-02-20 --time 19:30 --party-size 2
 
@@ -89,9 +92,16 @@ oakley-bookings rate --booking-id BK_... --rating 5 --notes "incredible pasta"
 0 10 * * * oakley-bookings rate-prompt
 ```
 
+## Google APIs Required
+
+Enable these in the same Google Cloud project (single API key covers both):
+
+- **Places API (New)** — restaurant search and details
+- **Geolocation API** — `--near-me` location detection
+
 ## Dependencies
 
-- `requests>=2.28.0` — HTTP client for Google Places and Resy APIs
+- `requests>=2.28.0` — HTTP client for Google Places, Geolocation, and Resy APIs
 - `pytz>=2023.3` — Sydney timezone handling
 - `gog` CLI (system) — Google Calendar integration (optional, for calendar entries after booking)
 
