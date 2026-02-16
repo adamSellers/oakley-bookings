@@ -1,9 +1,9 @@
 ---
 name: oakley-bookings
 description: "Restaurant discovery & booking skill. Search restaurants via Google Places, check availability, book tables via Resy (automated) or deep links (OpenTable, Quandoo), manage bookings, rate visits, and get dining suggestions. Sydney, Australia focused."
-requires:
-  bins:
-    - gog
+metadata:
+  requires-bins: gog
+  requires-skills: oakley-sms
 ---
 
 # Oakley Bookings Skill
@@ -246,7 +246,7 @@ exec oakley-bookings remind
 
 Checks for confirmed bookings in the next 2-4 hours. Outputs a reminder with restaurant name, time, address, and Maps link. Silent (no output) if nothing upcoming.
 
-**When to use:** Called by cron every 30 minutes. Deliver output via `message` if there's a reminder.
+**When to use:** Called by cron every 30 minutes. Deliver output via `message` if there's a reminder. Optionally, also send via SMS using `oakley-sms send --calling-skill oakley-bookings` for important bookings.
 
 ### rate-prompt — Post-Dinner Rating Prompt (Cron)
 
