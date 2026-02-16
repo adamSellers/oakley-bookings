@@ -1,3 +1,4 @@
+README.md
 pyproject.toml
 setup.py
 oakley_bookings/__init__.py
@@ -20,3 +21,8 @@ oakley_bookings/common/cache.py
 oakley_bookings/common/config.py
 oakley_bookings/common/formatting.py
 oakley_bookings/common/rate_limiter.py
+tests/test_db.py
+tests/test_discovery.py
+tests/test_formatting.py
+tests/test_google_places.py
+tests/test_platforms.py

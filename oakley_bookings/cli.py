@@ -97,16 +97,32 @@ def cmd_search(args):
     from oakley_bookings.common import truncate_for_telegram, format_section_header, format_rating, format_price_level
     from oakley_bookings import discovery
 
-    results = discovery.search(
-        query=args.query,
-        date=args.date,
-        time=args.time,
-        party_size=args.party_size,
-        price_range=args.price_range,
-        min_rating=args.min_rating,
-        radius_m=args.radius,
-        sort_by=args.sort,
-    )
+    lat = None
+    lng = None
+    if args.near_me:
+        from oakley_bookings.google_places import geolocate
+        loc = geolocate()
+        if loc:
+            lat = loc["lat"]
+            lng = loc["lng"]
+        else:
+            print("Warning: Geolocation failed, falling back to Sydney CBD.", file=sys.stderr)
+
+    kwargs = {
+        "query": args.query,
+        "date": args.date,
+        "time": args.time,
+        "party_size": args.party_size,
+        "price_range": args.price_range,
+        "min_rating": args.min_rating,
+        "radius_m": args.radius,
+        "sort_by": args.sort,
+    }
+    if lat is not None:
+        kwargs["lat"] = lat
+        kwargs["lng"] = lng
+
+    results = discovery.search(**kwargs)
 
     if not results:
         print("No restaurants found matching your search.")
@@ -538,6 +554,7 @@ def main():
     search_parser.add_argument("--min-rating", type=float, default=None, help="Minimum Google rating (e.g. 4.0)")
     search_parser.add_argument("--radius", type=int, default=5000, help="Search radius in meters (default: 5000)")
     search_parser.add_argument("--sort", default="rating", help="Sort by: rating|distance|booking_ease")
+    search_parser.add_argument("--near-me", action="store_true", help="Use current location via Geolocation API")
 
     # details
     details_parser = subparsers.add_parser("details", help="Get restaurant details")

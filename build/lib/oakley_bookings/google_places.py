@@ -249,6 +249,45 @@ def nearby_restaurants(
     return results
 
 
+def geolocate() -> Optional[dict]:
+    """Get current location via Google Geolocation API.
+
+    Returns: {lat, lng, accuracy} or None on failure.
+    Uses the same API key as Places — requires Geolocation API enabled.
+    """
+    cache_key = "geolocate_current"
+    cached = _cache.get(cache_key, ttl=300)  # 5 min cache
+    if cached is not None:
+        return cached
+
+    key = auth.get_google_key()
+    if not key:
+        return None
+
+    try:
+        resp = requests.post(
+            f"https://www.googleapis.com/geolocation/v1/geolocate?key={key}",
+            json={"considerIp": True},
+            timeout=Config.request_timeout,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        location = data.get("location", {})
+        result = {
+            "lat": location.get("lat"),
+            "lng": location.get("lng"),
+            "accuracy": data.get("accuracy"),
+        }
+
+        if result["lat"] and result["lng"]:
+            _cache.set(cache_key, result)
+            return result
+        return None
+    except requests.RequestException:
+        return None
+
+
 def test_connection() -> dict:
     """Test Google Places API connectivity with a minimal request."""
     try:
