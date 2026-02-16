@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "oakley-bookings"
-version = "1.0.0"
+version = "1.1.0"
 description = "Restaurant discovery & booking CLI — Google Places search, Resy booking, multi-platform deep links"
 requires-python = ">=3.8"
 dependencies = [
